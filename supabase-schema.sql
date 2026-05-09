@@ -100,6 +100,41 @@ ALTER TABLE houses ADD COLUMN IF NOT EXISTS phone TEXT DEFAULT '';
 ALTER TABLE houses ADD COLUMN IF NOT EXISTS map_url TEXT DEFAULT '';
 ALTER TABLE houses ADD COLUMN IF NOT EXISTS address TEXT DEFAULT '';
 
--- 5. إعدادات التخزين (Storage) للصور
+-- 5. جدول إعدادات الموقع (لإدارة معلومات التواصل والدعم)
+CREATE TABLE IF NOT EXISTS site_settings (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  -- معلومات التواصل
+  owner_name TEXT DEFAULT 'المالك',
+  owner_phone TEXT DEFAULT '213550000000',
+  owner_email TEXT DEFAULT 'owner@mamabinat.dz',
+  whatsapp_message TEXT DEFAULT 'مرحباً، أود الاستفسار عن المنزل',
+  -- روابط التواصل الاجتماعي
+  instagram TEXT DEFAULT '',
+  twitter TEXT DEFAULT '',
+  facebook TEXT DEFAULT '',
+  -- معلومات عامة
+  tagline TEXT DEFAULT 'بيتك في كل مكان.. مع ماما بينات',
+  description TEXT DEFAULT 'منصة حجز وتأجير المنازل في ولاية بومرداس والجزائر',
+  address TEXT DEFAULT 'ولاية بومرداس، الجزائر',
+  -- الدعم
+  support_phone TEXT DEFAULT '213550000000',
+  support_email TEXT DEFAULT 'support@mamabinat.dz',
+  support_hours TEXT DEFAULT 'من 9 صباحاً إلى 9 مساءً',
+  -- سياسات
+  cancellation_policy TEXT DEFAULT 'يمكن إلغاء الحجز قبل 24 ساعة من تاريخ الوصول',
+  privacy_policy TEXT DEFAULT 'نحن نحترم خصوصيتك. لن يتم مشاركة معلوماتك مع أي طرف ثالث.',
+  about_us TEXT DEFAULT 'ماما بينات هي منصة حجز وتأجير المنازل في الجزائر، نوفر أفضل خيارات الإقامة في ولاية بومرداس.'
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "public_read_settings" ON site_settings FOR SELECT USING (TRUE);
+CREATE POLICY "admin_all_settings" ON site_settings FOR ALL USING (auth.role() = 'authenticated');
+
+-- إدراج الصف الافتراضي
+INSERT INTO site_settings (id) VALUES (gen_random_uuid())
+ON CONFLICT DO NOTHING;
+
+-- 6. إعدادات التخزين (Storage) للصور
 -- أنشئ Bucket بإسم 'house-images' عام من Supabase Dashboard:
 -- Storage → New bucket → house-images (Public bucket)

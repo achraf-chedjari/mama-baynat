@@ -98,3 +98,29 @@ export interface City {
 export interface BookingWithConflictCheck extends Booking {
   conflict?: boolean;
 }
+
+export interface SiteSettings {
+  id: string;
+  updated_at?: string;
+  // معلومات التواصل
+  owner_name: string;
+  owner_phone: string;
+  owner_email: string;
+  whatsapp_message: string;
+  // روابط التواصل الاجتماعي
+  instagram: string;
+  twitter: string;
+  facebook: string;
+  // معلومات عامة
+  tagline: string;
+  description: string;
+  address: string;
+  // الدعم
+  support_phone: string;
+  support_email: string;
+  support_hours: string;
+  // سياسات
+  cancellation_policy: string;
+  privacy_policy: string;
+  about_us: string;
+}
