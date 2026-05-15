@@ -79,7 +79,8 @@ export async function updateBookingStatus(
         .eq("house_id", booking.house_id)
         .eq("status", "confirmed")
         .neq("id", id)
-        .or(`check_in.lte.${booking.check_out},check_out.gte.${booking.check_in}`);
+        .lt("check_in", booking.check_out)
+        .gt("check_out", booking.check_in);
 
       if (conflicts && conflicts.length > 0) {
         // Revert the status back to pending

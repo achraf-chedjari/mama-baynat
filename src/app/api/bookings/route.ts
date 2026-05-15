@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
       .select("id, check_in, check_out")
       .eq("house_id", body.house_id)
       .eq("status", "confirmed")
-      .or(`check_in.lte.${body.check_out},check_out.gte.${body.check_in}`);
+      .lt("check_in", body.check_out)
+      .gt("check_out", body.check_in);
 
     if (conflictError) throw conflictError;
 
